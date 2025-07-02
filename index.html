@@ -337,7 +337,52 @@
             color: var(--accent);
         }
         
-    
+        /* Mobile Menu */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--dark-bg);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-nav.active {
+            transform: translateY(0);
+        }
+        
+        .mobile-nav ul {
+            list-style: none;
+            text-align: center;
+        }
+        
+        .mobile-nav li {
+            margin: 20px 0;
+        }
+        
+        .mobile-nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+        
+        .remove-menu {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -430,8 +475,18 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
+        <button class="menu-toggle" id="menuToggle">☰</button>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-nav" id="mobileNav">
+        <button class="remove-menu" id="removeMenu">xxxxxxxxxxxx</button>
+        <ul>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
 
     <!-- Image Viewer -->
     <div class="image-viewer" id="imageViewer">
@@ -732,7 +787,41 @@ All my social links are below
     </footer>
 
     <script>
-       
+      // Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function () {
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+
+    if (!menuToggle || !mobileNav) {
+        console.warn("Brakuje elementów menu.");
+        return;
+    }
+
+    // Przełącznik menu – otwiera/zamyka
+    menuToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        mobileNav.classList.toggle('active');
+    });
+
+    // Kliknięcie poza menu zamyka je
+    document.addEventListener('click', function (e) {
+        if (
+            mobileNav.classList.contains('active') &&
+            !mobileNav.contains(e.target) &&
+            e.target !== menuToggle
+        ) {
+            mobileNav.classList.remove('active');
+        }
+    });
+
+    // Kliknięcie w link w menu też zamyka
+    const navLinks = mobileNav.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+        });
+    });
+});
         
         // Image viewer functionality
         const imageViewer = document.getElementById('imageViewer');
